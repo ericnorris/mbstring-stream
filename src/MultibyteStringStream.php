@@ -44,9 +44,9 @@ class MultibyteStringStream extends php_user_filter {
             return false;
         }
 
-        if (is_int($this->params) || is_string($this->params)) {
-            $this->prev_mb_substitute_character = mb_substitute_character();
+        $this->prev_mb_substitute_character = mb_substitute_character();
 
+        if (is_int($this->params) || is_string($this->params)) {
             mb_substitute_character($this->params);
         }
 
