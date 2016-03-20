@@ -12,5 +12,8 @@
             "email": "erictnorris@gmail.com"
         }
     ],
-    "require": {}
+    "require": {},
+    "autoload": {
+        "files": ["src/MultibyteStringStream.php"]
+    }
 }

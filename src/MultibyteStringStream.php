@@ -106,6 +106,10 @@ class MultibyteStringStream extends php_user_filter {
         );
     }
 
+    public static function registerStreamFilter() {
+        stream_filter_register('convert.mbstring.*', __CLASS__);
+    }
+
 }
 
-stream_filter_register('convert.mbstring.*', 'MultibyteStringStream');
+MultibyteStringStream::registerStreamFilter();
