@@ -135,7 +135,7 @@ class MultibyteStringStreamTest extends PHPUnit_Framework_TestCase {
         $this->assertSame(
             $expected,
             $result,
-            'Did not handle partial multibyte character'
+            'Did not correctly flush remaining invalid data'
         );
     }
 
@@ -163,9 +163,12 @@ class MultibyteStringStreamTest extends PHPUnit_Framework_TestCase {
     }
 
     public function unicodeMappingProvider() {
-        foreach (glob(__DIR__ . '/data/*.ucm') as $ucm_filename) {
-            yield basename($ucm_filename) => $this->parseUcmFile($ucm_filename);
-        }
+        $ucm_files = glob(__DIR__ . '/data/*.ucm');
+
+        return array_combine($ucm_files, array_map(
+            array($this, 'parseUcmFile'),
+            $ucm_files
+        ));
     }
 
     public function parseUcmFile($charset_filepath) {
