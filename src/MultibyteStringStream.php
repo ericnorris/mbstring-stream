@@ -75,8 +75,8 @@ class MultibyteStringStream extends php_user_filter {
         }
 
         if ($closing && !empty($buffer)) {
-            $stream = is_resource($this->stream) ? $this->stream :
-                                                   fopen('php://memory', 'r');
+            $stream = isset($this->stream) && is_resource($this->stream) ?
+                $this->stream : fopen('php://memory', 'r');
 
             $remaining = $this->convert($buffer);
             $bucket    = stream_bucket_new($stream, $remaining);
