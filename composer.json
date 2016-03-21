@@ -3,7 +3,8 @@
     "description": "An mbstring stream conversion filter.",
     "type": "library",
     "require-dev": {
-        "phpunit/phpunit": "^5.2"
+        "phpunit/phpunit": "^5.2",
+        "phpunit/php-code-coverage": "^3"
     },
     "license": "MIT",
     "authors": [
@@ -15,5 +16,8 @@
     "require": {},
     "autoload": {
         "files": ["src/MultibyteStringStream.php"]
+    },
+    "scripts": {
+        "test": "phpunit"
     }
 }
