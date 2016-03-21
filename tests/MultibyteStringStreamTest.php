@@ -88,10 +88,23 @@ class MultibyteStringStreamTest extends PHPUnit_Framework_TestCase {
         $donut_second_half = substr("🍩", 2);
 
         fwrite($output, $donut_first_half);
-        flush($output);
+        fflush($output);
+
+        rewind($output);
+
+        $expected = '';
+        $result   = stream_get_contents($output);
+
+        $this->assertSame(
+            $expected,
+            $result,
+            'Wrote out invalid character'
+        );
+
+        fseek($output, 2);
 
         fwrite($output, $donut_second_half);
-        flush($output);
+        fflush($output);
 
         rewind($output);
 
