@@ -5,6 +5,8 @@ require_once './vendor/autoload.php';
 class MultibyteStringStreamTest extends PHPUnit_Framework_TestCase {
 
     public function testStreamFilterWasRegistered() {
+        MultibyteStringStream::registerStreamFilter();
+
         $this->assertContains('convert.mbstring.*', stream_get_filters());
     }
 
@@ -95,6 +97,27 @@ class MultibyteStringStreamTest extends PHPUnit_Framework_TestCase {
 
         $expected = '🍩';
         $result   = stream_get_contents($output);
+
+        $this->assertSame(
+            $expected,
+            $result,
+            'Did not handle partial multibyte character'
+        );
+    }
+
+    public function testCloseInvalidData() {
+        $output     = fopen('php://output', 'w');
+        $filtername = 'convert.mbstring.UTF-8/UTF-8';
+
+        stream_filter_append($output, $filtername);
+
+        ob_start();
+
+        fwrite($output, substr("🍩", 0, 2));
+        fclose($output);
+
+        $expected = '?';
+        $result   = ob_get_clean();
 
         $this->assertSame(
             $expected,
