@@ -1,4 +1,4 @@
-# Multibyte String Stream Filter <img src="https://travis-ci.org/ericnorris/mbstring-stream.svg">
+# Multibyte String Stream Filter [![Build Status](https://travis-ci.org/ericnorris/mbstring-stream.svg?branch=master)](https://travis-ci.org/ericnorris/mbstring-stream)
 A `php_user_filter` implementation for quickly and safely converting stream character sets.
 
 ## Example
