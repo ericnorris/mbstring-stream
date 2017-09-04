@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 class MultibyteStringStream extends php_user_filter {
 
@@ -30,13 +30,12 @@ class MultibyteStringStream extends php_user_filter {
         $conversion_part = explode('/', $conversion_part);
 
         $to_encoding   = $conversion_part[0];
-        $from_encoding = isset($conversion_part[1]) ? $conversion_part[1] :
-                                                      mb_internal_encoding();
+        $from_encoding = $conversion_part[1] ?? mb_internal_encoding();
 
         $encodings = mb_list_encodings();
         $aliases   = array_map('mb_encoding_aliases', $encodings);
 
-        $valid_encodings = array_reduce($aliases, 'array_merge', $encodings);
+        $valid_encodings = array_merge($encodings, ...$aliases);
 
         if (!in_array($to_encoding, $valid_encodings) ||
             !in_array($from_encoding, $valid_encodings)) {
@@ -111,5 +110,3 @@ class MultibyteStringStream extends php_user_filter {
     }
 
 }
-
-MultibyteStringStream::registerStreamFilter();

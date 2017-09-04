@@ -1,8 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 
-require_once './vendor/autoload.php';
-
-class MultibyteStringStreamTest extends PHPUnit_Framework_TestCase {
+class MultibyteStringStreamTest extends \PHPUnit\Framework\TestCase {
 
     public function testStreamFilterWasRegistered() {
         MultibyteStringStream::registerStreamFilter();
