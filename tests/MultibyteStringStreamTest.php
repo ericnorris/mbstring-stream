@@ -196,4 +196,23 @@ class MultibyteStringStreamTest extends \PHPUnit\Framework\TestCase {
         return array($unicode_string, $charset_filename, $charset_string);
     }
 
+    public function testMalformedByteSequence() {
+        list($unicode_string, $_charset_filename, $charset_string)
+             = $this->parseUcmFile(__DIR__ . '/data/SJIS_MalformedByte.txt');
+        
+        $input      = base64_encode($charset_string);
+        $stream     = fopen('data://text/plain;base64,' . $input, 'r');
+        $filtername = 'convert.mbstring.UTF-8/SJIS' . $charset;
+
+        stream_filter_append($stream, $filtername);
+
+        $expected = $unicode_string;
+        $result   = stream_get_contents($stream);
+
+        $this->assertSame(
+            $expected,
+            $result,
+            'Failed to decode according to UCM file'
+        );
+    }
 }
