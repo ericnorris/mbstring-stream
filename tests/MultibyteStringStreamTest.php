@@ -202,7 +202,7 @@ class MultibyteStringStreamTest extends \PHPUnit\Framework\TestCase {
         
         $input      = base64_encode($charset_string);
         $stream     = fopen('data://text/plain;base64,' . $input, 'r');
-        $filtername = 'convert.mbstring.UTF-8/SJIS' . $charset;
+        $filtername = 'convert.mbstring.UTF-8/SJIS';
 
         stream_filter_append($stream, $filtername);
 
