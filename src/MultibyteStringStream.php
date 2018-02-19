@@ -84,10 +84,6 @@ class MultibyteStringStream extends php_user_filter {
             stream_bucket_append($out, $bucket);
         }
 
-        if (!empty($buffer)) {
-            return PSFS_FEED_ME;
-        }
-
         return PSFS_PASS_ON;
     }
 
