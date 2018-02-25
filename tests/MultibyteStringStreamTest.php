@@ -2,9 +2,11 @@
 
 class MultibyteStringStreamTest extends \PHPUnit\Framework\TestCase {
 
-    public function testStreamFilterWasRegistered() {
+    public function setUp() {
         MultibyteStringStream::registerStreamFilter();
+    }
 
+    public function testStreamFilterWasRegistered() {
         $this->assertContains('convert.mbstring.*', stream_get_filters());
     }
 
