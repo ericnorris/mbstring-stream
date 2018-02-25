@@ -118,6 +118,30 @@ class MultibyteStringStreamTest extends \PHPUnit\Framework\TestCase {
         );
     }
 
+    public function testMultibyteEdgeHandlingAfterBucketWrite() {
+        $output     = fopen('php://memory', 'w+');
+        $filtername = 'convert.mbstring.UTF-8/UTF-8';
+
+        stream_filter_append($output, $filtername, STREAM_FILTER_WRITE);
+
+        $bucket_data    = str_pad('', 128, 'abc');
+        $malformed_data = substr("🍩", 0, 2);
+
+        fwrite($output, $bucket_data . $malformed_data);
+        fflush($output);
+
+        rewind($output);
+
+        $expected = $bucket_data;
+        $result   = stream_get_contents($output);
+
+        $this->assertSame(
+            $expected,
+            $result,
+            'Failed to preserve valid data'
+        );
+    }
+
     public function testCloseInvalidData() {
         $output     = fopen('php://output', 'w');
         $filtername = 'convert.mbstring.UTF-8/UTF-8';

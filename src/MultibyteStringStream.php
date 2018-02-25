@@ -58,19 +58,23 @@ class MultibyteStringStream extends php_user_filter {
     }
 
     public function filter($in, $out, &$consumed, $closing) {
-        $buffer = &$this->buffer;
+        $buffer  = &$this->buffer;
+        $pass_on = false;
 
         while ($bucket = stream_bucket_make_writeable($in)) {
             $encoded_data = $buffer . $bucket->data;
             $valid_chars  = $this->truncateInvalidCharacters($encoded_data);
             $buffer       = substr($encoded_data, strlen($valid_chars));
 
-            $decoded_data = $this->convert($valid_chars, $this->to_encoding);
+            $consumed += $bucket->datalen;
 
-            $bucket->data = $decoded_data;
-            $consumed     = $consumed + $bucket->datalen;
+            if (!empty($valid_chars)) {
+                $bucket->data = $this->convert($valid_chars, $this->to_encoding);
 
-            stream_bucket_append($out, $bucket);
+                stream_bucket_append($out, $bucket);
+
+                $pass_on = true;
+            }
         }
 
         if ($closing && !empty($buffer)) {
@@ -82,13 +86,11 @@ class MultibyteStringStream extends php_user_filter {
             $buffer    = '';
 
             stream_bucket_append($out, $bucket);
+
+            $pass_on = true;
         }
 
-        if (!empty($buffer)) {
-            return PSFS_FEED_ME;
-        }
-
-        return PSFS_PASS_ON;
+        return $pass_on ? PSFS_PASS_ON : PSFS_FEED_ME;
     }
 
     private function truncateInvalidCharacters($data) {
