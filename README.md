@@ -28,11 +28,11 @@ stream_copy_to_stream($native_file, $unicode_file);
 ## Usage
 ```php
 /**
- * resource   $stream`        The stream to filter.
- * string     $to_encoding`   The encoding to convert to.
- * string     $from_encoding` The encoding to convert from. Optional, defaults to mb_internal_encoding()
- * int        $read_write`    See http://php.net/manual/en/function.stream-filter-append.php
- * string|int $sub_char`      The substitute character to use. Optional, defaults to mb_substitute_character()
+ * resource   $stream        The stream to filter.
+ * string     $to_encoding   The encoding to convert to.
+ * string     $from_encoding The encoding to convert from. Optional, defaults to mb_internal_encoding()
+ * int        $read_write    See http://php.net/manual/en/function.stream-filter-append.php
+ * string|int $sub_char      The substitute character to use. Optional, defaults to mb_substitute_character()
  */
 stream_filter_append($stream, "convert.mbstring.$to_encoding/$from_encoding", $read_write, $sub_char);
 ```
