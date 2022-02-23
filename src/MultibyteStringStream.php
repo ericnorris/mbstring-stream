@@ -4,28 +4,22 @@ class MultibyteStringStream extends php_user_filter {
 
     const NON_CHARACTER = "\xFF\xFF";
 
-    // @var string
-    public $filtername;
+    public string $filtername;
 
-    // @var mixed
-    public $params;
+    public mixed $params;
 
-    // @var resource
+    /** @var resource */
     public $stream;
 
-    // @var string
-    private $to_encoding;
+    private string $to_encoding;
 
-    // @var string
-    private $from_encoding;
+    private string $from_encoding;
 
-    // @var int
-    private $prev_mb_substitute_character;
+    private int $prev_mb_substitute_character;
 
-    // @var string
-    private $buffer;
+    private ?string $buffer;
 
-    public function onCreate() {
+    public function onCreate(): bool {
         $conversion_part = substr($this->filtername, 17);
         $conversion_part = explode('/', $conversion_part);
 
@@ -51,13 +45,15 @@ class MultibyteStringStream extends php_user_filter {
 
         $this->to_encoding   = $to_encoding;
         $this->from_encoding = $from_encoding;
+
+        return true;
     }
 
-    public function onClose() {
+    public function onClose(): void {
         mb_substitute_character($this->prev_mb_substitute_character);
     }
 
-    public function filter($in, $out, &$consumed, $closing) {
+    public function filter($in, $out, &$consumed, $closing): int {
         $buffer  = &$this->buffer;
         $pass_on = false;
 
@@ -93,13 +89,13 @@ class MultibyteStringStream extends php_user_filter {
         return $pass_on ? PSFS_PASS_ON : PSFS_FEED_ME;
     }
 
-    private function truncateInvalidCharacters($data) {
+    private function truncateInvalidCharacters(string $data): string {
         $padded_data = $data . self::NON_CHARACTER;
 
         return mb_strcut($padded_data, 0, strlen($data), $this->from_encoding);
     }
 
-    private function convert($data) {
+    private function convert(string $data): string {
         return mb_convert_encoding(
             $data,
             $this->to_encoding,
@@ -107,7 +103,7 @@ class MultibyteStringStream extends php_user_filter {
         );
     }
 
-    public static function registerStreamFilter() {
+    public static function registerStreamFilter(): void {
         stream_filter_register('convert.mbstring.*', __CLASS__);
     }
 
