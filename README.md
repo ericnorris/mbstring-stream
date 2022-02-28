@@ -1,5 +1,8 @@
-# Multibyte String Stream Filter [![Build Status](https://travis-ci.org/ericnorris/mbstring-stream.svg?branch=master)](https://travis-ci.org/ericnorris/mbstring-stream)
-A `php_user_filter` implementation for quickly and safely converting stream character sets.
+# Multibyte String Stream Filter ![Build Status](https://github.com/ericnorris/mbstring-stream/actions/workflows/ci.yml/badge.svg)
+
+A `php_user_filter` implementation for quickly converting stream character sets without loading the entire string into memory.
+
+**Note:** this library does not have the ability to persist state for _stateful_ character sets, and as such, could potentially lose data. See https://github.com/ericnorris/mbstring-stream/issues/1 for an open issue, and [this document](https://www.debian.org/doc/manuals/intro-i18n/ch-coding.en.html#s-stateful) for more info about stateful character sets.
 
 ## Example
 ```php
