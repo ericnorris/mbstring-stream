@@ -2,15 +2,15 @@
 
 class MultibyteStringStreamTest extends \PHPUnit\Framework\TestCase {
 
-    public function setUp() {
+    public function setUp(): void {
         MultibyteStringStream::registerStreamFilter();
     }
 
-    public function testStreamFilterWasRegistered() {
+    public function testStreamFilterWasRegistered(): void {
         $this->assertContains('convert.mbstring.*', stream_get_filters());
     }
 
-    public function testValidConversionParams() {
+    public function testValidConversionParams(): void {
         $stream     = fopen('data://text/plain;base64,', 'r');
         $filtername = 'convert.mbstring.US-ASCII/UTF-8';
 
@@ -22,7 +22,7 @@ class MultibyteStringStreamTest extends \PHPUnit\Framework\TestCase {
         );
     }
 
-    public function testInvalidConversionParams() {
+    public function testInvalidConversionParams(): void {
         $stream     = fopen('data://text/plain;base64,', 'r');
         $filtername = 'convert.mbstring.FAKE/UTF-8';
 
@@ -34,7 +34,7 @@ class MultibyteStringStreamTest extends \PHPUnit\Framework\TestCase {
         );
     }
 
-    public function testDefaultConversionParam() {
+    public function testDefaultConversionParam(): void {
         $stream     = fopen('data://text/plain;base64,', 'r');
         $filtername = 'convert.mbstring.UTF-8';
 
@@ -46,7 +46,7 @@ class MultibyteStringStreamTest extends \PHPUnit\Framework\TestCase {
         );
     }
 
-    public function testDefaultReplacementCharacterParam() {
+    public function testDefaultReplacementCharacterParam(): void {
         $stream     = fopen('data://text/plain;base64,Zvxy', 'r');
         $filtername = 'convert.mbstring.UTF-8/UTF-8';
 
@@ -62,7 +62,7 @@ class MultibyteStringStreamTest extends \PHPUnit\Framework\TestCase {
         );
     }
 
-    public function testReplacementCharacterParam() {
+    public function testReplacementCharacterParam(): void {
         $stream     = fopen('data://text/plain;base64,Zvxy', 'r');
         $filtername = 'convert.mbstring.UTF-8/UTF-8';
 
@@ -78,7 +78,7 @@ class MultibyteStringStreamTest extends \PHPUnit\Framework\TestCase {
         );
     }
 
-    public function testMultibyteEdgeHandling() {
+    public function testMultibyteEdgeHandling(): void {
         $output     = fopen('php://memory', 'w+');
         $filtername = 'convert.mbstring.UTF-8/UTF-8';
 
@@ -118,7 +118,7 @@ class MultibyteStringStreamTest extends \PHPUnit\Framework\TestCase {
         );
     }
 
-    public function testMultibyteEdgeHandlingAfterBucketWrite() {
+    public function testMultibyteEdgeHandlingAfterBucketWrite(): void {
         $output     = fopen('php://memory', 'w+');
         $filtername = 'convert.mbstring.UTF-8/UTF-8';
 
@@ -142,7 +142,7 @@ class MultibyteStringStreamTest extends \PHPUnit\Framework\TestCase {
         );
     }
 
-    public function testCloseInvalidData() {
+    public function testCloseInvalidData(): void {
         $output     = fopen('php://output', 'w');
         $filtername = 'convert.mbstring.UTF-8/UTF-8';
 
@@ -166,9 +166,9 @@ class MultibyteStringStreamTest extends \PHPUnit\Framework\TestCase {
     /**
      * @dataProvider unicodeMappingProvider
      */
-    public function testCharsetConversion($unicode_string,
-                                          $charset,
-                                          $charset_string) {
+    public function testCharsetConversion(string $unicode_string,
+                                          string $charset,
+                                          string $charset_string): void {
 
         $input      = base64_encode($charset_string);
         $stream     = fopen('data://text/plain;base64,' . $input, 'r');
@@ -186,16 +186,16 @@ class MultibyteStringStreamTest extends \PHPUnit\Framework\TestCase {
         );
     }
 
-    public function unicodeMappingProvider() {
+    public function unicodeMappingProvider(): array {
         $ucm_files = glob(__DIR__ . '/data/*.ucm');
 
         return array_combine($ucm_files, array_map(
-            array($this, 'parseUcmFile'),
+            $this->parseUcmFile(...),
             $ucm_files
         ));
     }
 
-    public function parseUcmFile($charset_filepath) {
+    public function parseUcmFile(string $charset_filepath): array {
         $charset_filename = basename($charset_filepath, '.ucm');
         $unicode_string   = '';
         $charset_string   = '';
@@ -219,7 +219,7 @@ class MultibyteStringStreamTest extends \PHPUnit\Framework\TestCase {
             }
         }
 
-        return array($unicode_string, $charset_filename, $charset_string);
+        return [$unicode_string, $charset_filename, $charset_string];
     }
 
 }
