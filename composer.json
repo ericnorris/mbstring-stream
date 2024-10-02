@@ -13,7 +13,7 @@
         }
     ],
     "require": {
-        "php": "8.1.x|8.2.x",
+        "php": "8.1.x|8.2.x|8.3.x",
         "ext-mbstring": "*"
     },
     "autoload": {
