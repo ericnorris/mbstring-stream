@@ -101,8 +101,6 @@ class MultibyteStringStreamTest extends \PHPUnit\Framework\TestCase {
             'Wrote out invalid character'
         );
 
-        fseek($output, 2);
-
         fwrite($output, $donut_second_half);
         fflush($output);
 
